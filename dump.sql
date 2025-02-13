@@ -30,7 +30,7 @@ USE `form_mistercheff`;
 --
 
 CREATE TABLE `empresas` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
   `cnpj` varchar(18) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -43,7 +43,9 @@ CREATE TABLE `empresas` (
   `cidade` varchar(255) NOT NULL,
   `estado` varchar(2) NOT NULL,
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `data_cadastro` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `data_cadastro` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_cnpj` (`cnpj`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 COMMIT;
 
