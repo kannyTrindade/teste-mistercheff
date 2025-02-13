@@ -1,0 +1,44 @@
+services:
+    memcached:
+        image: 'memcached:alpine'
+
+    redis:
+        image: 'redis:alpine'
+
+    db:
+        image: 'mysql:latest'
+        working_dir: /files
+        volumes:
+            - ./mysql_data:/var/lib/mysql
+        environment:
+            - MYSQL_ALLOW_EMPTY_PASSWORD=1
+            - MYSQL_DATABASE=teste-mistercheff
+        ports:
+            - '8002:3306'
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        depends_on:
+            - db
+        environment:
+            PMA_HOST: db
+        ports:
+            - '8080:80'
+
+    webserver:
+        image: 'nginx:alpine'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        ports:
+            - '8000:80'
+
+    php-fpm:
+        build: phpdocker/php-fpm
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
